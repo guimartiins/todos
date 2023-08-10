@@ -1,1 +1,14 @@
-Hello World!
+{
+	"todos": [
+		{
+			"content": "Hello world",
+			"created_at": "2023-08-10T01:33:39.644Z",
+			"done": false
+		},
+		{
+			"content": "Hello world 2",
+			"created_at": "2023-08-10T01:33:39.644Z",
+			"done": false
+		}
+	]
+}

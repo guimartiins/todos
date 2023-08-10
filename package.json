@@ -4,13 +4,16 @@
 	"description": "Creating a CRUD",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "nodemon ./core/crud.js"
+		"dev:crud": "nodemon --ext ts,tsx --exec 'npm run start:crud'",
+		"start:crud": "npx ts-node ./core/crud.ts",
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"nodemon": "^3.0.1"
+		"@types/node": "^20.4.9",
+		"nodemon": "^3.0.1",
+		"typescript": "^5.1.6"
 	}
 }
