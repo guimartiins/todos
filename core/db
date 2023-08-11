@@ -1,14 +1,1 @@
-{
-	"todos": [
-		{
-			"content": "Hello world",
-			"created_at": "2023-08-10T01:33:39.644Z",
-			"done": false
-		},
-		{
-			"content": "Hello world 2",
-			"created_at": "2023-08-10T01:33:39.644Z",
-			"done": false
-		}
-	]
-}
+{"todos":[{"id":"20357e86-f051-4a94-add9-e42e5cfb7bf2","content":"Hello world","created_at":"2023-08-11T00:13:07.527Z","done":false},{"id":"efa7986e-88fa-40b2-82d3-17f3b0b0cd75","content":"Hello world 2","created_at":"2023-08-11T00:13:07.528Z","done":false},{"id":"1dae3f84-23a9-4a42-830d-4766d9acd448","content":"Hello world 3 updated","created_at":"2023-08-11T00:13:07.528Z","done":false}]}
