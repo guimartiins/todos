@@ -2,8 +2,9 @@ const fs = require('fs')
 const DB_FILE_PATH = './core/db'
 const uuid = require('crypto')
 
+type UUID = string
 interface Todo {
-	id: string
+	id: UUID
 	content: string
 	created_at: string
 	done: boolean
@@ -31,7 +32,7 @@ function create(content: string) {
 	return todo
 }
 
-function update(id: string, todo: Partial<Todo>) {
+function update(id: UUID, todo: Partial<Todo>) {
 	const todos = read()
 	const index = todos.findIndex((t) => t.id === id)
 
@@ -56,7 +57,7 @@ function update(id: string, todo: Partial<Todo>) {
 	return todos[index]
 }
 
-function updateContentByID(id: string, todo: Partial<Todo>) {
+function updateContentByID(id: UUID, todo: Partial<Todo>) {
 	return update(id, todo)
 }
 
@@ -69,6 +70,29 @@ function read(): Todo[] {
 	}
 
 	return db.todos
+}
+
+function deleteByID(id: UUID) {
+	const todos = read()
+	const index = todos.findIndex((t) => t.id === id)
+
+	if (index === -1) {
+		throw new Error('Todo not found')
+	}
+
+	const todo = todos[index]
+	todos.splice(index, 1)
+
+	fs.writeFileSync(
+		DB_FILE_PATH,
+		JSON.stringify({
+			todos,
+		}),
+		null,
+		2
+	)
+
+	return todo
 }
 
 function clearDB() {
@@ -87,3 +111,4 @@ create('Hello world')
 create('Hello world 2')
 const todo = create('Hello world 3')
 updateContentByID(todo.id, { content: 'Hello world 3 updated' })
+deleteByID(todo.id)
