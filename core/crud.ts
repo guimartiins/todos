@@ -1,4 +1,4 @@
-import fs from 'fs'
+import * as fs from 'fs'
 const DB_FILE_PATH = './core/db'
 import { randomUUID } from 'crypto'
 
@@ -25,8 +25,6 @@ function create(content: string) {
         JSON.stringify({
             todos,
         }),
-        null,
-        2,
     )
 
     return todo
@@ -50,8 +48,6 @@ function update(id: UUID, todo: Partial<Todo>) {
         JSON.stringify({
             todos,
         }),
-        null,
-        2,
     )
 
     return todos[index]
@@ -88,8 +84,6 @@ function deleteByID(id: UUID) {
         JSON.stringify({
             todos,
         }),
-        null,
-        2,
     )
 
     return todo
@@ -101,8 +95,6 @@ function clearDB() {
         JSON.stringify({
             todos: [],
         }),
-        null,
-        2,
     )
 }
 
