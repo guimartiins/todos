@@ -1,6 +1,13 @@
-async function get() {
-    return fetch('api/todos').then(async (response) => {
-        return response.json()
+import { todoRepository } from '@ui/repository/todo'
+
+type TodoControllerGetParams = {
+    page: number
+}
+
+async function get(params: TodoControllerGetParams) {
+    return todoRepository.get({
+        page: params.page,
+        limit: 2,
     })
 }
 
