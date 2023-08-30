@@ -18,28 +18,30 @@ function get({
     page,
     limit,
 }: TodoRepositoryGetParams): Promise<TodoRepositoryGetOutput> {
-    return fetch('api/todos').then(async (response) => {
-        const { todos: ALL_TODOS } = parseTodos(await response.json())
+    return fetch(`api/todos?page=${page}&limit=${limit}`).then(
+        async (response) => {
+            const parsedResponse = parseTodos(await response.json())
 
-        const startIndex = (page - 1) * limit
-        const endIndex = page * limit
-
-        const paginatedTodos = ALL_TODOS.slice(startIndex, endIndex)
-        const totalPages = Math.ceil(ALL_TODOS.length / limit)
-
-        return {
-            todos: paginatedTodos,
-            total: ALL_TODOS.length,
-            pages: totalPages,
-        }
-    })
+            return {
+                todos: parsedResponse.todos,
+                total: parsedResponse.total,
+                pages: parsedResponse.pages,
+            }
+        },
+    )
 }
 
-function parseTodos(response: unknown): { todos: Todo[] } {
+function parseTodos(response: unknown): {
+    todos: Todo[]
+    total: number
+    pages: number
+} {
     if (
         response !== null &&
         typeof response === 'object' &&
         'todos' in response &&
+        'total' in response &&
+        'pages' in response &&
         Array.isArray(response.todos)
     ) {
         return {
@@ -60,10 +62,14 @@ function parseTodos(response: unknown): { todos: Todo[] } {
                     date: new Date(date),
                 }
             }),
+            total: Number(response.total),
+            pages: Number(response.pages),
         }
     }
     return {
         todos: [],
+        total: 0,
+        pages: 1,
     }
 }
 

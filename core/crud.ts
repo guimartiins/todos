@@ -6,7 +6,7 @@ type UUID = string
 interface Todo {
     id: UUID
     content: string
-    created_at: string
+    date: string
     done: boolean
 }
 
@@ -14,7 +14,7 @@ function create(content: string) {
     const todo: Todo = {
         id: randomUUID(),
         content,
-        created_at: new Date().toISOString(),
+        date: new Date().toISOString(),
         done: false,
     }
 

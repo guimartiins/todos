@@ -12,18 +12,28 @@ type HomeTodo = {
 }
 
 function Home() {
+    const [initialLoadComplete, setInitialLoadComplete] = useState(false)
     const [totalPages, setTotalPages] = useState(0)
     const [todos, setTodos] = useState<HomeTodo[]>([])
     const [page, setPage] = useState(1)
+    const [isLoading, setIsLoading] = useState(true)
+    const hasNoTodos = todos.length === 0 && !isLoading
 
     const hasMorePages = page < totalPages
-
     useEffect(() => {
-        todoController.get({ page }).then(({ todos, pages }) => {
-            setTodos((t) => [...t, ...todos])
-            setTotalPages(pages)
-        })
-    }, [page])
+        setInitialLoadComplete(true)
+        if (!initialLoadComplete) {
+            todoController
+                .get({ page })
+                .then(({ todos, pages }) => {
+                    setTodos(todos)
+                    setTotalPages(pages)
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        }
+    }, [])
 
     return (
         <main>
@@ -84,21 +94,24 @@ function Home() {
                             )
                         })}
 
-                        {/* <tr>
-                            <td
-                                colSpan={4}
-                                align="center"
-                                style={{ textAlign: 'center' }}
-                            >
-                                Carregando...
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colSpan={4} align="center">
-                                Nenhum item encontrado
-                            </td>
-                        </tr> */}
+                        {isLoading && (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    align="center"
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    Carregando...
+                                </td>
+                            </tr>
+                        )}
+                        {hasNoTodos && (
+                            <tr>
+                                <td colSpan={4} align="center">
+                                    Nenhum item encontrado
+                                </td>
+                            </tr>
+                        )}
 
                         {hasMorePages && (
                             <tr>
@@ -109,7 +122,20 @@ function Home() {
                                 >
                                     <button
                                         data-type="load-more"
-                                        onClick={() => setPage((p) => p + 1)}
+                                        onClick={() => {
+                                            const nextPage = page + 1
+                                            setPage(nextPage)
+
+                                            todoController
+                                                .get({ page: nextPage })
+                                                .then(({ todos, pages }) => {
+                                                    setTodos((t) => [
+                                                        ...t,
+                                                        ...todos,
+                                                    ])
+                                                    setTotalPages(pages)
+                                                })
+                                        }}
                                     >
                                         Página {page}, Carregar mais{' '}
                                         <span
