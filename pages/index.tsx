@@ -14,12 +14,17 @@ type HomeTodo = {
 function Home() {
     const [initialLoadComplete, setInitialLoadComplete] = useState(false)
     const [totalPages, setTotalPages] = useState(0)
-    const [todos, setTodos] = useState<HomeTodo[]>([])
     const [page, setPage] = useState(1)
+    const [search, setSearch] = useState('')
+    const [todos, setTodos] = useState<HomeTodo[]>([])
     const [isLoading, setIsLoading] = useState(true)
-    const hasNoTodos = todos.length === 0 && !isLoading
-
     const hasMorePages = page < totalPages
+    const homeTodos = todoController.filterTodosByContent<HomeTodo>(
+        todos,
+        search,
+    )
+    const hasNoTodos = homeTodos.length === 0 && !isLoading
+
     useEffect(() => {
         setInitialLoadComplete(true)
         if (!initialLoadComplete) {
@@ -61,6 +66,10 @@ function Home() {
                     <input
                         type="text"
                         placeholder="Filtrar lista atual, ex: Dentista"
+                        value={search}
+                        onChange={function handleSearch(event) {
+                            setSearch(event.target.value)
+                        }}
                     />
                 </form>
 
@@ -77,7 +86,7 @@ function Home() {
                     </thead>
 
                     <tbody>
-                        {todos.map((todo) => {
+                        {homeTodos.map((todo) => {
                             return (
                                 <tr key={todo.id}>
                                     <td>
