@@ -43,13 +43,7 @@ function Home() {
     return (
         <main>
             <GlobalStyles />
-            <header
-                style={
-                    {
-                        //  backgroundImage: `url('${bg}')`,
-                    }
-                }
-            >
+            <header>
                 <div className="typewriter">
                     <h1>O que fazer hoje?</h1>
                 </div>
