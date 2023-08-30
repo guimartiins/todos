@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { GlobalStyles } from '@ui/theme/GlobalStyles'
 import { useState } from 'react'
 import { useEffect } from 'react'
@@ -12,7 +12,7 @@ type HomeTodo = {
 }
 
 function Home() {
-    const [initialLoadComplete, setInitialLoadComplete] = useState(false)
+    const initialLoadComplete = useRef(false)
     const [totalPages, setTotalPages] = useState(0)
     const [page, setPage] = useState(1)
     const [search, setSearch] = useState('')
@@ -26,8 +26,7 @@ function Home() {
     const hasNoTodos = homeTodos.length === 0 && !isLoading
 
     useEffect(() => {
-        setInitialLoadComplete(true)
-        if (!initialLoadComplete) {
+        if (!initialLoadComplete.current) {
             todoController
                 .get({ page })
                 .then(({ todos, pages }) => {
@@ -36,6 +35,7 @@ function Home() {
                 })
                 .finally(() => {
                     setIsLoading(false)
+                    initialLoadComplete.current = true
                 })
         }
     }, [])
