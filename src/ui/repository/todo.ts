@@ -1,3 +1,5 @@
+import { Todo, TodoSchema } from '@ui/schema/todo'
+
 type TodoRepositoryGetParams = {
     page: number
     limit: number
@@ -6,12 +8,6 @@ type TodoRepositoryGetOutput = {
     todos: Todo[]
     pages: number
     total: number
-}
-type Todo = {
-    id: string
-    date: Date
-    content: string
-    done: boolean
 }
 
 function get({
@@ -29,6 +25,31 @@ function get({
             }
         },
     )
+}
+
+async function createByContent(content: string): Promise<Todo> {
+    const response = await fetch('api/todos', {
+        method: 'POST',
+        body: JSON.stringify({
+            content,
+        }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    if (response.ok) {
+        const serverResponse = await response.json()
+
+        const serverResponseParsed = TodoSchema.safeParse(serverResponse)
+        if (!serverResponseParsed.success) {
+            throw new Error('Error creating todo')
+        }
+        const todo = serverResponseParsed.data
+        return todo
+    }
+
+    throw new Error('Error creating todo')
 }
 
 function parseTodos(response: unknown): {
@@ -59,7 +80,7 @@ function parseTodos(response: unknown): {
                     id,
                     content,
                     done: isDone(done),
-                    date: new Date(date),
+                    date,
                 }
             }),
             total: Number(response.total),
@@ -79,4 +100,5 @@ function isDone(done: string) {
 
 export const todoRepository = {
     get,
+    createByContent,
 }

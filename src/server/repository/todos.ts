@@ -1,4 +1,4 @@
-import { read } from '@core/crud'
+import { read, create } from '@core/crud'
 
 type Todo = {
     id: string
@@ -26,7 +26,7 @@ function get(
 ): TodoRepositoryGetOutput {
     const currentPage = page || 1
     const currentLimit = limit || 2
-    const ALL_TODOS = read()
+    const ALL_TODOS = read().reverse()
 
     const startIndex = (currentPage - 1) * currentLimit
     const endIndex = currentPage * currentLimit
@@ -41,6 +41,13 @@ function get(
     }
 }
 
+async function createByContent(content: string): Promise<Todo> {
+    const newTodo = create(content)
+
+    return newTodo
+}
+
 export const todoRepository = {
     get,
+    createByContent,
 }

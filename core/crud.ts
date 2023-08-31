@@ -10,7 +10,7 @@ interface Todo {
     done: boolean
 }
 
-function create(content: string) {
+export function create(content: string) {
     const todo: Todo = {
         id: randomUUID(),
         content,
@@ -30,7 +30,7 @@ function create(content: string) {
     return todo
 }
 
-function update(id: UUID, todo: Partial<Todo>) {
+export function update(id: UUID, todo: Partial<Todo>) {
     const todos = read()
     const index = todos.findIndex((t) => t.id === id)
 
@@ -53,7 +53,7 @@ function update(id: UUID, todo: Partial<Todo>) {
     return todos[index]
 }
 
-function updateContentByID(id: UUID, todo: Partial<Todo>) {
+export function updateContentByID(id: UUID, todo: Partial<Todo>) {
     return update(id, todo)
 }
 
@@ -68,7 +68,7 @@ export function read(): Todo[] {
     return db.todos
 }
 
-function deleteByID(id: UUID) {
+export function deleteByID(id: UUID) {
     const todos = read()
     const index = todos.findIndex((t) => t.id === id)
 
@@ -89,7 +89,7 @@ function deleteByID(id: UUID) {
     return todo
 }
 
-function clearDB() {
+export function clearDB() {
     fs.writeFileSync(
         DB_FILE_PATH,
         JSON.stringify({
@@ -99,9 +99,8 @@ function clearDB() {
 }
 
 clearDB()
-create('Hello world')
-create('Hello world 2')
-const todo = create('Hello world 3')
-updateContentByID(todo.id, { content: 'Hello world 3 updated' })
-create('Hello world 4')
-create('Hello world 5')
+;(() => {
+    for (let i = 0; i < 5; i++) {
+        create(`Todo ${i + 1}`)
+    }
+})()

@@ -3,26 +3,19 @@ import { GlobalStyles } from '@ui/theme/GlobalStyles'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { todoController } from '../src/ui/controller/todo'
-
-type UUID = string
-
-type HomeTodo = {
-    id: UUID
-    content: string
-}
+import { Todo } from '@ui/schema/todo'
 
 function Home() {
     const initialLoadComplete = useRef(false)
     const [totalPages, setTotalPages] = useState(0)
     const [page, setPage] = useState(1)
     const [search, setSearch] = useState('')
-    const [todos, setTodos] = useState<HomeTodo[]>([])
+    const [todos, setTodos] = useState<Todo[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [newTodoContent, setNewTodoContent] = useState('')
     const hasMorePages = page < totalPages
-    const homeTodos = todoController.filterTodosByContent<HomeTodo>(
-        todos,
-        search,
-    )
+
+    const homeTodos = todoController.filterTodosByContent<Todo>(todos, search)
     const hasNoTodos = homeTodos.length === 0 && !isLoading
 
     useEffect(() => {
@@ -47,8 +40,29 @@ function Home() {
                 <div className="typewriter">
                     <h1>O que fazer hoje?</h1>
                 </div>
-                <form>
-                    <input type="text" placeholder="Correr, Estudar..." />
+                <form
+                    onSubmit={(event) => {
+                        event.preventDefault()
+                        todoController.create({
+                            content: newTodoContent,
+                            onError() {
+                                alert('content required')
+                            },
+                            onSuccess(todo: Todo) {
+                                setTodos((t) => [...t, todo])
+                                setNewTodoContent('')
+                            },
+                        })
+                    }}
+                >
+                    <input
+                        type="text"
+                        placeholder="Correr, Estudar..."
+                        value={newTodoContent}
+                        onChange={function newTodoHandler(event) {
+                            setNewTodoContent(event.target.value)
+                        }}
+                    />
                     <button type="submit" aria-label="Adicionar novo item">
                         +
                     </button>
