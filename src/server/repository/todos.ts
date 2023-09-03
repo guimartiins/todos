@@ -1,4 +1,4 @@
-import { read, create } from '@core/crud'
+import { read, create, update } from '@core/crud'
 
 type Todo = {
     id: string
@@ -47,7 +47,24 @@ async function createByContent(content: string): Promise<Todo> {
     return newTodo
 }
 
+async function toggleDone(id: string): Promise<Todo> {
+    const ALL_TODOS = read()
+
+    const todo = ALL_TODOS.find((t) => t.id === id)
+
+    if (!todo) {
+        throw new Error(`Todo not found for id ${id}`)
+    }
+
+    const updatedTodo = await update(id, {
+        done: !todo.done,
+    })
+
+    return updatedTodo
+}
+
 export const todoRepository = {
     get,
     createByContent,
+    toggleDone,
 }

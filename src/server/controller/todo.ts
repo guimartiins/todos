@@ -29,7 +29,31 @@ async function create(req: NextApiRequest, res: NextApiResponse) {
     res.status(201).json(output)
 }
 
+async function toggleDone(req: NextApiRequest, res: NextApiResponse) {
+    const id = req.query.id
+
+    if (!id || typeof id !== 'string') {
+        res.status(400).json({
+            error: {
+                message: 'You need to provide a valid ID to toggle a TODO.',
+            },
+        })
+        return
+    }
+    try {
+        const output = await todoRepository.toggleDone(id)
+        res.status(200).json(output)
+    } catch (error) {
+        res.status(404).json({
+            error: {
+                message: error.message,
+            },
+        })
+    }
+}
+
 export const todoController = {
     get,
     create,
+    toggleDone,
 }

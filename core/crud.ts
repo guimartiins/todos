@@ -98,9 +98,10 @@ export function clearDB() {
     )
 }
 
-clearDB()
-;(() => {
-    for (let i = 0; i < 5; i++) {
-        create(`Todo ${i + 1}`)
-    }
-})()
+// ;(() => {
+//     clearDB()
+
+//     for (let i = 0; i < 5; i++) {
+//         create(`Todo ${i + 1}`)
+//     }
+// })()

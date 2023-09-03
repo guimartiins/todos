@@ -98,7 +98,30 @@ function isDone(done: string) {
     return String(done).toLowerCase() === 'true'
 }
 
+async function toggleDone(id: string): Promise<Todo> {
+    const response = await fetch(`api/todos/${id}/toggle-done`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    if (response.ok) {
+        const serverResponse = await response.json()
+
+        const serverResponseParsed = TodoSchema.safeParse(serverResponse)
+        if (!serverResponseParsed.success) {
+            throw new Error(`Error updating todo id - ${id}`)
+        }
+        const todo = serverResponseParsed.data
+        return todo
+    }
+
+    throw new Error(`Error updating todo id - ${id}`)
+}
+
 export const todoRepository = {
     get,
     createByContent,
+    toggleDone,
 }
