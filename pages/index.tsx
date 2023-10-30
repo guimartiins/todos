@@ -137,7 +137,31 @@ function Home() {
                                         {todo.done && <s>{todo.content}</s>}
                                     </td>
                                     <td align="right">
-                                        <button data-type="delete">
+                                        <button
+                                            data-type="delete"
+                                            onClick={function handleDelete() {
+                                                todoController
+                                                    .deleteById(todo.id)
+                                                    .then(() => {
+                                                        setTodos((t) => {
+                                                            return t.filter(
+                                                                (current) => {
+                                                                    return (
+                                                                        current.id !==
+                                                                        todo.id
+                                                                    )
+                                                                },
+                                                            )
+                                                        })
+                                                    })
+                                                    .catch(() =>
+                                                        // eslint-disable-next-line no-console
+                                                        console.error(
+                                                            'Failed to delete',
+                                                        ),
+                                                    )
+                                            }}
+                                        >
                                             Apagar
                                         </button>
                                     </td>
