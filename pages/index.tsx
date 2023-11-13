@@ -57,6 +57,7 @@ function Home() {
                 >
                     <input
                         type="text"
+                        name="add-todo"
                         placeholder="Correr, Estudar..."
                         value={newTodoContent}
                         onChange={function newTodoHandler(event) {
