@@ -62,7 +62,7 @@ export function read(): Todo[] {
     const db = JSON.parse(dbString || '{}')
 
     if (!db.todos) {
-        ;[]
+        return []
     }
 
     return db.todos
@@ -97,11 +97,3 @@ export function clearDB() {
         }),
     )
 }
-
-// ;(() => {
-//     clearDB()
-
-//     for (let i = 0; i < 5; i++) {
-//         create(`Todo ${i + 1}`)
-//     }
-// })()
